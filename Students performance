@@ -1,0 +1,188 @@
+This project showcases a comprehensive analysis of a dataset containing information on 2,392 high school students, focusing on their demographics, study habits, parental involvement, extracurricular activities, and academic performance. The target variable, GradeClass, categorizes students’ grades into distinct categories, providing a robust dataset for educational research, predictive modeling, and statistical analysis.
+Project Objectives:
+Data Cleaning and Preparation: Use pandas to clean and prepare the dataset for exploration and analysis.
+Exploratory Data Analysis (EDA): Perform EDA to understand the data, identify patterns, and generate meaningful visualizations using Matplotlib and Seaborn.
+Hypothesis Testing: Apply hypothesis tests to statistically support findings and uncover significant relationships between variables.
+Key Findings and Insights: Report key findings and actionable insights derived from the analysis.
+Dataset Overview:
+The dataset includes various attributes related to high school students, categorized into the following sections:
+
+Student Information: Unique student identifiers.
+Demographic Details: Age, gender, and ethnicity.
+Study Habits: Weekly study time, absences, and tutoring status.
+Parental Involvement: Level of parental support and parents’ education level.
+Extracurricular Activities: Participation in extracurricular activities, sports, music, and volunteering.
+Academic Performance: Grade Point Average (GPA).
+Target Variable - Grade Class: Classification of students’ grades based on GPA.
+This project aims to analyze and uncover insights from this dataset, which can be useful for educational researchers, policymakers, and educators. By following a structured approach, this project will illustrate the entire data analysis workflow, from data cleaning to hypothesis testing and reporting, showcasing our data science capabilities.
+
+Below is the code used in this project:
+
+Project Title: Analysis of High School Students’ Academic Performance
+Importing Libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy import stats
+
+Loading the Dataset
+Assuming the dataset is in a CSV file named ‘high_school_students.csv’
+df = pd.read_csv(‘C:/Users/CRS/Desktop/python_project/student_performance_data.csv’)
+
+Display the first few rows of the dataset
+df.head()
+
+Data Cleaning
+Checking for missing values
+print(df.isnull().sum())
+
+Handling missing values (for simplicity, let’s drop rows with missing values)
+df.dropna(inplace=True)
+
+Converting data types if necessary (e.g., converting categorical variables to category type)
+df[‘Gender’] = df[‘Gender’].astype(‘category’)
+df[‘Ethnicity’] = df[‘Ethnicity’].astype(‘category’)
+df[‘ParentalEducation’] = df[‘ParentalEducation’].astype(‘category’)
+df[‘Tutoring’] = df[‘Tutoring’].astype(‘category’)
+df[‘ParentalSupport’] = df[‘ParentalSupport’].astype(‘category’)
+df[‘Extracurricular’] = df[‘Extracurricular’].astype(‘category’)
+df[‘Sports’] = df[‘Sports’].astype(‘category’)
+df[‘Music’] = df[‘Music’].astype(‘category’)
+df[‘Volunteering’] = df[‘Volunteering’].astype(‘category’)
+df[‘GradeClass’] = df[‘GradeClass’].astype(‘category’)
+
+Verify changes
+df.info()
+
+Exploratory Data Analysis (EDA) and Visualizations
+Display the shape of the dataset
+print(f"The dataset contains {df.shape[0]} rows and {df.shape[1]} columns.")
+
+Display summary statistics
+df.describe(include=‘all’)
+
+Checking for missing values
+missing_values = df.isnull().sum()
+print(missing_values[missing_values > 0])
+
+Setting up the visualizations
+plt.figure(figsize=(14, 8))
+
+Gender Distribution
+plt.subplot(2, 2, 1)
+sns.countplot(x=‘Gender’, data=df, palette=‘viridis’)
+plt.title(‘Gender Distribution’)
+
+Ethnicity Distribution
+plt.subplot(2, 2, 2)
+sns.countplot(x=‘Ethnicity’, data=df, palette=‘viridis’)
+plt.title(‘Ethnicity Distribution’)
+
+Parental Education Distribution
+plt.subplot(2, 2, 3)
+sns.countplot(x=‘ParentalEducation’, data=df, palette=‘viridis’)
+plt.title(‘Parental Education Distribution’)
+
+Grade Class Distribution
+plt.subplot(2, 2, 4)
+sns.countplot(x=‘GradeClass’, data=df, palette=‘viridis’)
+plt.title(‘Grade Class Distribution’)
+
+plt.tight_layout()
+plt.show()
+
+Setting up the visualizations
+plt.figure(figsize=(14, 8))
+
+Age Distribution
+plt.subplot(2, 2, 1)
+sns.histplot(df[‘Age’], kde=True, color=‘blue’)
+plt.title(‘Age Distribution’)
+
+Study Time Weekly Distribution
+plt.subplot(2, 2, 2)
+sns.histplot(df[‘StudyTimeWeekly’], kde=True, color=‘green’)
+plt.title(‘Study Time Weekly Distribution’)
+
+Absences Distribution
+plt.subplot(2, 2, 3)
+sns.histplot(df[‘Absences’], kde=True, color=‘red’)
+plt.title(‘Absences Distribution’)
+
+GPA Distribution
+plt.subplot(2, 2, 4)
+sns.histplot(df[‘GPA’], kde=True, color=‘purple’)
+plt.title(‘GPA Distribution’)
+
+plt.tight_layout()
+plt.show()
+
+#Relationships Between Variables
+#Explore relationships between different variables, such as GPA vs. StudyTimeWeekly and GPA vs. Absences.
+
+Setting up the visualizations
+plt.figure(figsize=(14, 8))
+
+GPA vs Study Time Weekly
+plt.subplot(2, 2, 1)
+sns.scatterplot(x=‘StudyTimeWeekly’, y=‘GPA’, data=df, hue=‘GradeClass’, palette=‘viridis’)
+plt.title(‘GPA vs Study Time Weekly’)
+
+GPA vs Absences
+plt.subplot(2, 2, 2)
+sns.scatterplot(x=‘Absences’, y=‘GPA’, data=df, hue=‘GradeClass’, palette=‘viridis’)
+plt.title(‘GPA vs Absences’)
+
+GPA vs Age
+plt.subplot(2, 2, 3)
+sns.boxplot(x=‘GradeClass’, y=‘Age’, data=df, palette=‘viridis’)
+plt.title(‘GPA vs Age’)
+
+Parental Support vs GPA
+plt.subplot(2, 2, 4)
+sns.boxplot(x=‘ParentalSupport’, y=‘GPA’, data=df, palette=‘viridis’)
+plt.title(‘Parental Support vs GPA’)
+
+plt.tight_layout()
+plt.show()
+
+Extracting study time for grade ‘A’ and grade ‘B’ students
+study_time_a = df[df[‘GradeClass’] == 0][‘StudyTimeWeekly’]
+study_time_b = df[df[‘GradeClass’] == 1][‘StudyTimeWeekly’]
+
+Performing the t-test
+t_stat, p_val = stats.ttest_ind(study_time_a, study_time_b)
+
+print(f"T-test between Grade ‘A’ and ‘B’ Study Time Weekly: t-statistic = {t_stat:.3f}, p-value = {p_val:.3f}")
+
+if p_val < 0.05:
+print(“Reject the null hypothesis: There is a significant difference in weekly study time between grade ‘A’ and ‘B’ students.”)
+else:
+print(“Fail to reject the null hypothesis: There is no significant difference in weekly study time between grade ‘A’ and ‘B’ students.”)
+
+Creating a contingency table
+contingency_table = pd.crosstab(df[‘Gender’], df[‘GradeClass’])
+
+Performing the chi-square test
+chi2, p, dof, expected = stats.chi2_contingency(contingency_table)
+print(f"Chi-square test between Gender and GradeClass: chi2 = {chi2:.3f}, p-value = {p:.3f}")
+
+if p < 0.05:
+print(“Reject the null hypothesis: There is an association between gender and grade class.”)
+else:
+print(“Fail to reject the null hypothesis: There is no association between gender and grade class.”)
+
+Extracting GPA for students who participate and do not participate in extracurricular activities
+gpa_extracurricular = df[df[‘Extracurricular’] == 1][‘GPA’]
+gpa_no_extracurricular = df[df[‘Extracurricular’] == 0][‘GPA’]
+
+Performing the t-test
+t_stat, p_val = stats.ttest_ind(gpa_extracurricular, gpa_no_extracurricular)
+
+print(f"T-test for GPA between students with and without Extracurricular Activities: t-statistic = {t_stat:.3f}, p-value = {p_val:.3f}")
+
+if p_val < 0.05:
+print(“Reject the null hypothesis: There is a significant difference in GPA between students with and without extracurricular activities.”)
+else:
+print(“Fail to reject the null hypothesis: There is no significant difference in GPA between students with and without extracurricular activities.”)
